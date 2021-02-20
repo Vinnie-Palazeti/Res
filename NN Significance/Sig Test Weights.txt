@@ -1,0 +1,100 @@
+I am interested the Horel & Giesecke (2020) paper on significance testing in NN (https://arxiv.org/abs/1902.06021)
+
+The use the squared second partial derivative of the weights with respect to the feature as a sort of F statistic.
+
+My question is, if you just change the structure of the NN slightly, wouldn't that severely alter the results?
+
+
+Here are the test statistics from the first run. The structure of the alternative net is simply 25 hidden nodes. A single
+fully connected layer.
+
+NN Structure:
+self.hiden = layers.Dense(25, activation=tf.nn.sigmoid)
+self.out = layers.Dense(Y_dim)
+
+Test statistic:
+[1.28330096e+00 3.29030105e-01 3.28666080e-01 2.59611753e-01
+ 4.83171207e-01 4.85608122e-01 9.61344419e-03 5.01488933e-06
+ 4.64636226e-06 2.32612685e-05]
+
+Test statistic:
+[1.27826133e+00 3.29725740e-01 3.28564471e-01 2.58720593e-01
+ 4.82487908e-01 4.84606211e-01 9.60750388e-03 4.06714939e-06
+ 3.66666157e-06 2.39206492e-05]
+
+
+
+NN Structure:
+self.hidden = layers.Dense(30, activation=tf.nn.sigmoid)
+self.out = layers.Dense(Y_dim)
+
+Test statistic:
+[1.30990181e+00 3.29617838e-01 3.29412554e-01 2.65431869e-01
+ 4.74991431e-01 4.76603337e-01 9.46187836e-03 5.30091696e-06
+ 8.42731557e-06 6.07070615e-06]
+
+
+Test statistic:
+[1.27722953e+00 3.29183361e-01 3.28826307e-01 2.61637205e-01
+ 4.83678074e-01 4.85739989e-01 9.45737116e-03 4.28695611e-06
+ 4.05490865e-06 1.96899885e-05]
+
+ Test statistic:
+[1.30617400e+00 3.28762589e-01 3.28440130e-01 2.64449996e-01
+ 4.75177420e-01 4.76929376e-01 9.54073422e-03 6.07936752e-06
+ 3.98931022e-06 9.95968630e-06]
+
+
+ Test statistic:
+[1.28999429e+00 3.28882279e-01 3.29006987e-01 2.61048540e-01
+ 4.85612980e-01 4.87838510e-01 9.62679034e-03 3.65370309e-06
+ 7.06061779e-06 2.77778296e-05]
+
+
+NN Structure:
+self.hidden = layers.Dense(50, activation=tf.nn.sigmoid)
+self.out = layers.Dense(Y_dim)
+
+Test statistic:
+[1.29362228e+00 3.27428182e-01 3.27273197e-01 2.58156974e-01
+ 4.83159760e-01 4.84408465e-01 9.37847395e-03 9.17968342e-06
+ 5.78343319e-06 4.84340819e-06]
+
+
+For some of the variables I am returning different statistics. X_8 almost doubles in the third run. X_10 triples from the
+first run to the second run, then is only twice the first value in the third run. X_9 is also volatile 
+
+
+Re running with the same data shakes my confidence a bit. Were my original runs with different structures abberations?
+
+
+NN Structure:
+self.hidden = layers.Dense(25, activation=tf.nn.sigmoid)
+self.hidden = layers.Dense(25, activation=tf.nn.sigmoid)
+
+Test statistic:
+[1.28380337e+00 3.28302673e-01 3.28204701e-01 2.60823168e-01
+ 4.84939246e-01 4.87039560e-01 9.53121732e-03 3.65867051e-06
+ 5.58047320e-06 2.94434452e-05]
+
+
+
+NN Structure:
+self.hidden = layers.Dense(30, activation=tf.nn.sigmoid)
+self.hidden = layers.Dense(30, activation=tf.nn.sigmoid)
+
+
+ Test statistic:
+[1.28632896e+00 3.29806206e-01 3.29462188e-01 2.61402537e-01
+ 4.86135384e-01 4.88171661e-01 9.52522954e-03 3.82132456e-06
+ 5.61088828e-06 2.42147765e-05]
+
+
+
+
+I need to think about how to attack this problem. I am returning what look to be different test statistics
+for the alternative distribution. Is this variation significant? I need to test it against the null distributions
+like they do. I need to show that changing the structure of the net even slightly will return fucked up results.
+
+example: with 25 hidden nodes it ought to show the same variables are significant every time. if I change the nodes to, say,
+30, and different variables are now significant, then poof!
